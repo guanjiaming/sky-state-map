@@ -12,7 +12,7 @@ export async function initMap(container) {
         target: container,
         view: new View({
             center: center,
-            zoom: 4,
+            zoom: 6,
             maxZoom: 13,
             minZoom: 1
         }),

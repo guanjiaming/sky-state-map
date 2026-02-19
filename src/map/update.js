@@ -48,6 +48,7 @@ export function usePlaneUpdate(map) {
      * 更新数据
      */
     function updatePlaneLayer() {
+        console.log('updatePlaneLayer');
         const layers = map.getLayers().getArray();
         const planeLayer = layers.find(layer => layer.get('name') === 'plane');
         const features = planeLayer.getSource().getFeatures();
@@ -63,8 +64,10 @@ export function usePlaneUpdate(map) {
             const [x, y] = fromLonLat([lon, lat]);
             const t = (Date.now() - timePosition) / 1000;
             const d = velocity * t;
+            // console.log(11,heading,t, d, x, y);
 
             const newPoint = [x + d * Math.sin(heading), y + d * Math.cos(heading)];
+            // console.log('newPoint', newPoint);
             feature.getGeometry().setCoordinates(newPoint);
         }
     }
@@ -73,18 +76,21 @@ export function usePlaneUpdate(map) {
         const layers = map.getLayers().getArray();
         const pathLayer = layers.find(layer => layer.get('name') === 'path');
         const features = pathLayer.getSource().getFeatures();
-        console.log("features", features);
         const feature = features[0];
         if (!feature) return;
         const pathPoints = feature.getGeometry().getCoordinates();
 
         const icao24 = feature.get('icao24');
         const planeLayer = layers.find(layer => layer.get('name') === 'plane');
-        const planeFeatures = planeLayer.getFeatures().getArray();
+        console.log('planeLayer', planeLayer);
+        const planeSources = pathLayer.getSource();
+        const planeFeatures = planeSources.getFeatures();
+        console.log('planeFeatures', planeFeatures);
         const currentPlane = planeFeatures.find(feature => feature.get('icao24') === icao24);
         if (!currentPlane) {
             return;
         }
+        console.log('pathPoints', pathPoints);
         pathPoints[pathPoints.length - 1] = currentPlane.getGeometry().getCoordinates();
         feature.getGeometry().setCoordinates([...pathPoints]);
 
@@ -142,8 +148,8 @@ export function usePlaneUpdate(map) {
      */
     function getInterval(zoom) {
         zoom = Math.floor(zoom);
-        return [5000, 4000, 3000, 2000, 1000, 500, 100, 50][zoom] || 16
+        return [20000, 10000, 5000, 4000, 3000, 2000, 5000, 500, 100, 50][zoom] || 2000
     }
 
-    // update();
+    update();
 }

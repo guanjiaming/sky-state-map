@@ -3,10 +3,8 @@ import VectorLayer from "ol/layer/WebGLVector";
 import VectorSource from "ol/source/Vector";
 import {fromLonLat} from "ol/proj";
 import Point from "ol/geom/Point";
-import {LineString} from "ol/geom";
 
 import planeIcon from '../assets/airplane.svg';
-import mockData from '../data.json';
 import {fetchFlightData} from "@/api/index.js";
 
 const normalStyle = {

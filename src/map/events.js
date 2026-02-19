@@ -1,6 +1,7 @@
 import {Feature} from "ol";
 import {LineString} from "ol/geom";
 import {fromLonLat} from "ol/proj";
+import {fetchFlightState} from "@/api/index.js";
 
 export function useEvents(map) {
 
@@ -80,22 +81,15 @@ export function useEvents(map) {
          * 飞机的路径Feature
          * @returns {Feature<LineString, {[p: string]: any}>}
          */
-        function addPath(clickedFeature) {
-            // todo 调用接口获取当前飞机的path路径
+        async function addPath(clickedFeature) {
             const icao24 = clickedFeature.get('icao24');
-            console.log(icao24);
-            const mockPath = [
-                {lon: 106.8097, lat: 51.9719},
-                {lon: 106.7924, lat: 51.9804},
-                {lon: 106.749, lat: 51.0017},
-                {lon: 106.6684, lat: 51.0415},
-                {lon: 106.6709, lat: 51.0403},
-                {lon: 106.6645, lat: 51.0434},
-            ]
+
+            const state = await fetchFlightState(icao24);
+            console.log(state);
 
             const lastPoint = clickedFeature.getGeometry().getCoordinates();
 
-            const resultLineStrings = mockPath.map(item => {
+            const resultLineStrings = state.map(item => {
                 return fromLonLat([item.lon, item.lat]);
             })
 
